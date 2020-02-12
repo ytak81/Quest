@@ -1,0 +1,70 @@
+<meta charset="utf-8">
+<?php
+session_start();
+session_regenerate_id(true);
+if (isset($_SESSION['login']) == false) {
+  print 'ログインされていません。<br>';
+  print '<a href="login.html">ログイン画面へ</a>';
+  exit();
+} else {
+  $message = $_SESSION['staff_name'].'さんログイン中。';
+}
+
+//require_once('common.php');
+
+$json = $_SESSION['QUEST'];
+
+?>
+<!DOCTYPE html>
+<html lang="jp">
+<head>
+  <meta charset="utf-8">
+  <title>お問い合わせ管理</title>
+  <link rel="stylesheet" type="text/css" href="add.css">
+  <style type="text/css">
+    header{
+      background-color: white;
+    }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+  <script>
+    var json = '<?php echo $json; ?>';
+  </script>
+  <script src="list.js"></script>
+</head>
+<body>
+<header>
+  <h1>お問い合わせ一覧</h1>
+  <nav>
+    <div><form method="post" action="menu.html">
+      <input id="hbtn1" type="submit" value="メニューに戻る">
+    </form></div>
+    <div>　　　</div>
+    <div><form method="post" action="logout.php">
+      <input id="hbtn2" type="submit" value="ログアウト">
+    </form></div>
+  </nav>
+  <p class="msg"><?php echo($message); ?></p>
+  <form id="postMod" method="post" action="mod.html">
+  </form>
+</header>
+<main>
+    <table>
+    <tr>
+      <th width="80px">受付日</th>
+      <th width="50px">ｽﾀｯﾌ</th>
+      <th width="80px">状況</th>
+      <th width="100px">顧客会社</th>
+      <th width="50px">担当者</th>
+      <th width="150px">内容</th>
+      <th width="80px">回答日</th>
+      <th width="80px">完了日</th>
+      <th width="50px" class="hidden">code</th>
+    </tr>
+  </table>
+</main>
+<footer>
+  <h6>copywright 2020-2020 Takeyama Yoshito</h6>
+</footer>
+</body>
+</html>

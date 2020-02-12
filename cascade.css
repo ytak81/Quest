@@ -1,0 +1,49 @@
+@charset "utf-8";
+* {
+  margin: 0 auto;
+}
+.msg {
+  color:red;
+}
+
+header {
+  position: relative;
+  padding: 0 30px;
+  background-color: #eeeeee;
+}
+
+nav {
+  position: fixed;
+  right: 50px;
+  display: flex;
+  color: #eeeeee;
+}
+
+main {
+  position: relative;
+  padding: 0 20vw;
+  margin: 50px 0;
+}
+
+#text1 {
+  width: 100px;
+}
+#text2 {
+  width: 200px;
+}
+#btn1 {
+  float: right;
+}
+
+footer {
+  position: fixed;
+  bottom: 0px;
+  clear : both;
+  width : 100vw;  
+  height : 30px; 
+  background-color: #eeeeee;   
+}
+footer h6 {
+  text-align: center; 
+  padding-top: 10px;
+}
