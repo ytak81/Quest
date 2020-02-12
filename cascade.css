@@ -8,31 +8,29 @@
 
 header {
   position: relative;
-  padding: 0 30px;
+  padding: 0 30px 10px;
   background-color: #eeeeee;
 }
 
 nav {
   position: fixed;
+  z-index: 9999;
   right: 50px;
   display: flex;
-  color: #eeeeee;
+ /* color: #eeeeee; */
 }
 
 main {
+  clear: both;
   position: relative;
+}
+.maina {
   padding: 0 20vw;
   margin: 50px 0;
 }
-
-#text1 {
-  width: 100px;
-}
-#text2 {
-  width: 200px;
-}
-#btn1 {
-  float: right;
+.mainb {
+  padding: 0 10vw;
+  margin: 10px 0; 
 }
 
 footer {
@@ -46,4 +44,36 @@ footer {
 footer h6 {
   text-align: center; 
   padding-top: 10px;
+}
+
+#text1 {
+  width: 100px;
+}
+#text2 {
+  width: 200px;
+}
+.btnR {
+  float: right;
+}
+.fontSmall {
+  font-size: small;
+}
+
+.hidden {
+/* color: white;  */
+background-color: white;
+color: white;
+}
+.bgred {
+  background-color: red;
+  color: white;
+}
+.bgwhite {
+  background-color: white; 
+}
+.bgylgrn{
+  background-color: yellowgreen; 
+}
+.bgwine{
+  background-color: rgb(213, 130, 238); 
 }

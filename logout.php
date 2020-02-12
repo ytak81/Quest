@@ -16,6 +16,6 @@ session_destroy();
 <body>
 ログアウトしました。<br>
 <br>
-<a href="login.html">ログイン画面へ</a>
+<a href="login.php">ログイン画面へ</a>
 </body>
 </html>

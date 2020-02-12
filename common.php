@@ -1,20 +1,27 @@
 <?php
-/*
-function login_chk($flagMsg) {
-  session_start();
-  session_regenerate_id(true);
-  if (isset($_SESSION['login']) == false) {
-    print 'ログインされていません。<br>';
-    print '<a href="login.html">ログイン画面へ</a>';
-    exit();
-  } else {
-    if ($flagMsg==true) {
-      $message = $_SESSION['staff_name'].'さんログイン中。';
-    }
-  }
-} 
-*/
 
+//// データベースの排他制御（ロック・アンロック）
+//
+function dbLock($table) {
+  global $sql,$stmt,$dbh;
+
+  // lock
+  $sql = "LOCK TABLES ".$table." WRITE";
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+}
+
+function dbUnlock() {
+  global $sql,$stmt,$dbh;
+
+  // unlock
+  $sql = "UNLOCK TABLES";
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();  
+}
+
+//// データベース障害発生時の処理
+//
 function dberror($e) {
   // 発生した例外の情報をファイルに出力
     $messages = "";
@@ -31,6 +38,7 @@ function dberror($e) {
     exit();
 }
 
+//// サ二タイズ
 function sanitize($before) {
   foreach ($before as $key => $value) {
     $after[$key] = htmlspecialchars($value,ENT_QUOTES,'UTF-8');
@@ -38,6 +46,7 @@ function sanitize($before) {
   return $after;
 }
 
+//// ダンプ表示
 function dump($expression){
   echo "<pre>";
   var_dump($expression);

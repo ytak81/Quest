@@ -4,7 +4,7 @@ session_start();
 session_regenerate_id(true);
 if (isset($_SESSION['login']) == false) {
   print 'ログインされていません。<br>';
-  print '<a href="login.html">ログイン画面へ</a>';
+  print '<a href="login.php">ログイン画面へ</a>';
   exit();
 } 
 
@@ -130,7 +130,7 @@ $_SESSION['backflag'] = false;
     $_SESSION['backflag'] = true;
     $_SESSION['message'] = $msg;
     print $msg.'<br>';
-    print '<form method="post" action="mod.html"><input type="submit" value="お問い合わせ編集画面に戻る"></form>';
+    print '<form method="post" action="mod.php"><input type="submit" value="お問い合わせ編集画面に戻る"></form>';
     exit();  
   }
 ?>

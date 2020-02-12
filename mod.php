@@ -4,7 +4,7 @@ session_start();
 session_regenerate_id(true);
 if (isset($_SESSION['login']) == false) {
   print 'ログインされていません。<br>';
-  print '<a href="login.html">ログイン画面へ</a>';
+  print '<a href="login.php">ログイン画面へ</a>';
   exit();
 } else {
   $message = $_SESSION['staff_name'].'さんログイン中。';
@@ -16,11 +16,8 @@ $qcode= $_POST['qcode'];
 
 try {
   
-$dsn = 'mysql:dbname=company;host=localhost;charset=utf8';
-$user = 'root';
-$password = 'root';
-$dbh = new PDO($dsn,$user,$password);
-$dbh->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
+require_once('db_con.php');
+dbConnect();
 
 // 編集対象の問い合わせの取得 (ケースAのみ)
 if ($_SESSION['backflag'] == false) {
@@ -31,21 +28,10 @@ if ($_SESSION['backflag'] == false) {
 
   $rec = $stmt->fetch(PDO::FETCH_ASSOC);
 }
-// スタッフ名の取得
-$sql = 'SELECT name FROM mst_staff WHERE 1';
-$stmt = $dbh->prepare($sql);
-$stmt->execute();
-
-$lists = [];
-while(true) {
-  $rec2 = $stmt->fetch(PDO::FETCH_ASSOC);
-  if ($rec2 == false) {
-    break;
-  }
-  $lists[] = $rec2['name'];
-}
 
 $dbh = null;
+
+//var_dump($_SESSION['backflag']);
 
 // 画面表示項目の編集
 //   A)一覧画面から遷移した場合 (backflag==false)
@@ -78,6 +64,18 @@ if ($_SESSION['backflag'] == false) {
   $_SESSION['backflag'] = false;
 }
 
+$json = $_SESSION['staffAll'];
+
+// 受付担当者名の表示
+  // 管理者と担当者とで、表示する要素を切り替え
+  if ($_SESSION['authority'] == 0) {
+    $s0 = "show";
+    $s1 = "hide";
+  } else {
+    $s0 = "hide";
+    $s1 = "show";
+  }
+
 }
 
 catch (Exception $e) {
@@ -91,10 +89,12 @@ catch (Exception $e) {
 <head>
   <meta charset="utf-8">
   <title>お問い合わせ管理</title>
-  <link rel="stylesheet" type="text/css" href="add.css">
+  <link rel="stylesheet" type="text/css" href="cascade.css">
   <style>
     body {background-color: lightyellow}
     header {background-color: lightyellow}
+    .show {display : block;}
+    .hide {display : none;}
   </style>
 <!-- DatePicker  -->
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -109,13 +109,17 @@ catch (Exception $e) {
   <script src="./jquery-ui-timepicker-ja.js"></script>
   <link rel="stylesheet" href="./jquery-ui-timepicker-addon.min.css">
 <!-- Adding a Timepicker to jQuery UI Datepicker end -->
-  <script src="add.js"></script>
+  <script>
+    var json = '<?php echo $json; ?>';
+    var staff = '<?php echo $staff ?>';
+  </script>
+  <script src="mod.js"></script>
 </head>
 <body>
 <header>
   <h1>お問い合わせ編集</h1>
   <nav>
-    <div><form method="post" action="menu.html">
+    <div><form method="post" action="menu.php">
       <input id="hbtn1" type="submit" value="メニューに戻る">
     </form></div>
     <div>　　　</div>
@@ -125,7 +129,7 @@ catch (Exception $e) {
   </nav>
   <p class="msg"><?php echo($message); ?></p>
 </header>
-<main>
+<main class="mainb">
   <form method="post" action="mod_chk.php" autocomplete="off">
       <input type="hidden" name="qcode" value="<?php print $qcode; ?>">
     <h3><label for="dayEntry">受付日時　　: </label>
@@ -140,13 +144,13 @@ catch (Exception $e) {
     <h3><label for="cl_name">顧客担当者名: </label>
       <input type="text" name="cl_name" size="15" maxlength="15" value="<?php print $cl_name; ?>">
       <input type="hidden" name="cl_nameold" value="<?php print $cl_name; ?>"></h3>
-    <h3 id="staff"><label for="staff">受付担当者名: </label>
-      <input type="radio" name="staff" value="<?php print $lists[0];?>" <?php echo ($staff == $lists[0] ? 'checked' : '') ?>><?php print $lists[0];?>
-      <input type="radio" name="staff" value="<?php print $lists[1];?>" <?php echo ($staff == $lists[1] ? 'checked' : '') ?>><?php print $lists[1];?>
-      <input type="radio" name="staff" value="<?php print $lists[2];?>" <?php echo ($staff == $lists[2] ? 'checked' : '') ?>><?php print $lists[2];?>
-      <input type="radio" name="staff" value="<?php print $lists[3];?>" <?php echo ($staff == $lists[3] ? 'checked' : '') ?>><?php print $lists[3];?>
-      <input type="hidden" name="staffold" value="<?php print $staff; ?>"></h3>
-    </h3>
+    <div id="staff1" class="<?php echo $s0 ?>">
+      <h3>受付担当者名: <?php print $staff;?></h3></div>
+    <input type="hidden" name="staffold" value="<?php print $staff; ?>"></h3>
+    <div id="staff2" class="<?php echo $s1 ?>">
+      <h3><label for="staff">受付担当者名: </label>
+      <select id="staff" name="staff">
+      </select></h3></div>
     <h3><label for="status">対応状況　　: </label>
       <input type="radio" name="status" value="0" <?php echo ($status == '0' ? 'checked' : '') ?>>未着手
       <input type="radio" name="status" value="1" <?php echo ($status == '1' ? 'checked' : '') ?>>調査中
@@ -164,7 +168,7 @@ catch (Exception $e) {
     <h3><label for="dayClose">完了日時　　: </label>
       <input id="dayClose" type="text" name="dayClose" size="25" value="<?php print $dayClose; ?>">
       <input type="hidden" name="dayCloseold" value="<?php print $dayClose; ?>"></h3>
-    <input id="btn1" type="submit" value="　更　新　">
+    <input class="btnR" type="submit" value="　更　新　">
   </form>
   <br>
   <br>

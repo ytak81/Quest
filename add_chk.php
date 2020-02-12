@@ -4,7 +4,7 @@ session_start();
 session_regenerate_id(true);
 if (isset($_SESSION['login']) == false) {
   print 'ログインされていません。<br>';
-  print '<a href="login.html">ログイン画面へ</a>';
+  print '<a href="login.php">ログイン画面へ</a>';
   exit();
 } 
 
@@ -25,6 +25,9 @@ $_SESSION['backflag'] = false;
   $answer = $post['answer'];
   $dayClose = $post['dayClose'];
 
+  // 送信された情報を、次の画面へ引き継ぎ
+  $_SESSION['addQust'] = $post;
+
   if (mb_strlen($dayEntry) == 0) {
     $error_message = '受付日時が未入力です。';
     add_chk_back($error_message);
@@ -34,7 +37,7 @@ $_SESSION['backflag'] = false;
     add_chk_back($error_message);
   } else {
     $content = str_replace(array("\r\n","\n","\r"), '', $content);
-  // 送信された情報を、次の画面へ引き継ぎ
+  // データ整形後に、改めて次の画面へ引き継ぎ
     $post['content'] = $content;
     $_SESSION['addQust'] = $post;
   }
@@ -102,7 +105,7 @@ $_SESSION['backflag'] = false;
     $_SESSION['backflag'] = true;
     $_SESSION['message'] = $msg;
     print $msg.'<br>';
-    print '<form method="post" action="add.html"><input type="submit" value="お問い合わせ登録画面に戻る"></form>';
+    print '<form method="post" action="add.php"><input type="submit" value="お問い合わせ登録画面に戻る"></form>';
     exit();  
   }
 ?>

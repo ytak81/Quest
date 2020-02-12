@@ -5,7 +5,7 @@ session_start();
 session_regenerate_id(true);
 if (isset($_SESSION['login']) == false) {
   print 'ログインされていません。<br>';
-  print '<a href="login.html">ログイン画面へ</a>';
+  print '<a href="login.php">ログイン画面へ</a>';
   exit();
 } else {
   $message = $_SESSION['staff_name'].'さんログイン中。';
@@ -15,11 +15,8 @@ require_once('common.php');
 
 try {
   
-$dsn = 'mysql:dbname=company;host=localhost;charset=utf8';
-$user = 'root';
-$password = 'root';
-$dbh = new PDO($dsn,$user,$password);
-$dbh->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
+require_once('db_con.php');
+dbConnect();
 
 $sql = 'SELECT name FROM mst_staff WHERE 1';
 $stmt = $dbh->prepare($sql);
@@ -79,7 +76,7 @@ catch (Exception $e) {
 <head>
   <meta charset="utf-8">
   <title>お問い合わせ管理</title>
-  <link rel="stylesheet" type="text/css" href="add.css">
+  <link rel="stylesheet" type="text/css" href="cascade.css">
 <!-- DatePicker  -->
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
@@ -99,7 +96,7 @@ catch (Exception $e) {
 <header>
   <h1>お問い合わせ登録</h1>
   <nav>
-    <div><form method="post" action="menu.html">
+    <div><form method="post" action="menu.php">
       <input id="hbtn1" type="submit" value="メニューに戻る">
     </form></div>
     <div>　　　</div>
@@ -109,7 +106,7 @@ catch (Exception $e) {
   </nav>
   <p class="msg"><?php echo($message); ?></p>
 </header>
-<main>
+<main class="mainb">
   <form method="post" action="add_chk.php" autocomplete="off">
     <h3><label for="dayEntry">受付日時　　: </label>
       <input id="dayEntry" type="text" name="dayEntry" size="25" value="<?php echo $dayEntry; ?>"></h3>
@@ -119,12 +116,8 @@ catch (Exception $e) {
       <input type="text" name="client" size="30" maxlength="30" value="<?php echo $client; ?>"></h3>
     <h3><label for="cl_name">顧客担当者名: </label>
       <input type="text" name="cl_name" size="15" maxlength="15" value="<?php echo $cl_name; ?>"></h3>
-    <h3 id="staff"><label for="staff">受付担当者名: </label>
-      <input type="radio" name="staff" value="<?php print $lists[0];?>" <?php echo ($_SESSION['account'] == 'admin' ? 'checked' : 'disabled ="disabled"') ?>><?php print $lists[0];?>
-      <input type="radio" name="staff" value="<?php print $lists[1];?>" <?php echo ($_SESSION['account'] == 'user1' ? 'checked' : 'disabled ="disabled"') ?>><?php print $lists[1];?>
-      <input type="radio" name="staff" value="<?php print $lists[2];?>" <?php echo ($_SESSION['account'] == 'user2' ? 'checked' : 'disabled ="disabled"') ?>><?php print $lists[2];?>
-      <input type="radio" name="staff" value="<?php print $lists[3];?>" <?php echo ($_SESSION['account'] == 'user3' ? 'checked' : 'disabled ="disabled"') ?>><?php print $lists[3];?>
-    </h3>
+    <h3 id="staff">受付担当者名: <?php print $_SESSION['staff_name'];?>
+      <input type="hidden" name="staff_name" value="<?php echo $_SESSION['staff_name']; ?>"></h3>
     <h3><label for="status">対応状況　　: </label>
       <input type="radio" name="status" value="0" <?php echo ($status == "0" ? 'checked' : '') ?>>未着手
       <input type="radio" name="status" value="1" <?php echo ($status == "1" ? 'checked' : '') ?>>調査中
@@ -138,7 +131,7 @@ catch (Exception $e) {
     <br>
     <h3><label for="dayClose">完了日時　　: </label>
       <input id="dayClose" type="text" name="dayClose" size="25" value="<?php echo $dayClose; ?>"></h3>
-    <input id="btn1" type="submit" value="　登　録　">
+    <input class="btnR" type="submit" value="　登　録　">
   </form>
   <br>
   <br>

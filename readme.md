@@ -2,7 +2,7 @@
 お問い合わせ管理
 
 《バージョン》
-1.0
+2.0
 
 《動作環境》
 ・サーバ
@@ -15,27 +15,33 @@
 
 《納品物一式》
 1）設計書　：下記に記載。
-https://docs.google.com/spreadsheets/d/1WTjm9tuMdqC0qxhIHmhDDLxTFRboLrxT4ksVVO1_njw/edit#gid=0
+https://docs.google.com/spreadsheets/d/1qV9QxWI2kPopBDcb6K3vR9G3MuDHR0vIN9gajeU7gAs/edit#gid=0
 
-2）テスト仕様書兼報告書　：下記に記載。
-https://docs.google.com/spreadsheets/d/1zOU__WUaN5j0ks6Uwn5MCM4bsUF8NabTh3I1Ed7JZ4c/edit?userstoinvite=wish7ycn@gmail.com&ts=5e24fd2a&actionButton=1#gid=1053828369
+2)テスト仕様書兼報告書　：下記に記載。
+https://docs.google.com/spreadsheets/d/1yvo9Kr4G3bGZNrrDmU48d31PN-6sZBG3Q5Jsmvv_pio/edit#gid=1053828369
 
 3）テスト証跡　：下記に収納。
-https://drive.google.com/drive/folders/1DKzcKUj9G6WzYg1FRhR6XVGbjpHgIWvk
+https://drive.google.com/drive/folders/1WwQ4xtTEtX4c2SYgXrdm7lDUmbROtAI3
 
 
 
 《動作確認上の前提事項》
 データベース（MySQL）に対し、事前設定が必要になります（phpMyadminにて）。
-◎データベース名：company
 
-◎以下の2テーブルを用意します。
+◎データベースの作成
+・データベース名は任意です。
+（参考）システムでは「company」という名前で設定しています。そのため、
+「company」という名前でデータベースを新規作成した場合、次の「データベース名の設定」作業が不要となります。
+
+◎テーブルの作成
+・以下の2テーブルを用意します。
+
 1.テーブル名：mst_staff
-  設計書の「DB仕様」に従ってテーブル定義を行うとともに、本システムを使用する4名のレコードを登録します。
-  (4名の詳細は、上記設計書のシート「システム要件」の30行目以降を参照してください)
+・設計書の「DB仕様」に従ってテーブル定義を行います。
+・本システムを使用する1名のレコードを、管理者として登録します。
 
 2.テーブル名；dat_questions 
-　設計書の「DB仕様」に従ってテーブル定義を行います。
+・設計書の「DB仕様」に従ってテーブル定義を行います。
 （レコードの事前登録は不要です）
 
 
@@ -44,6 +50,43 @@ https://drive.google.com/drive/folders/1DKzcKUj9G6WzYg1FRhR6XVGbjpHgIWvk
 1）localhostと直結したフォルダー「htdocs」の配下に、フォルダー「company」を新規作成する。
 
 2）当システムのすべてのファイルを、1）で作成したフォルダー「company」の直下におく。
+
+3）フォルダー「company」内のファイル「db_con.php」を、エディタで開く。
+
+4）11行目に、次の記述がある。
+    $dbname = 'company';
+この記述の中で、「company」という箇所を、上記の「データベースの作成」にて作成したデータベースの名称に、上書き変更する。
+
+5）15行目に、次の記述がある。
+  $user = 'root';
+この記述の中で、「company」という箇所を、上記の「データベースの作成」により作成したデータベースのユーザ名に、上書き変更する。
+
+6）19行目に、次の記述がある。
+  $password = 'root';
+この記述の中で、「company」という箇所を、上記の「データベースの作成」により作成したデータベースのパスワードの値に、上書き変更する。
+
+7）ファイル「db_con.php」を上書き保存する。
+
+※注意：　ファイル「db_con.php」が壊れると、アプリが一切起動しなくなります。
+万一、本ファイルが壊れた場合は、ファイル「db_con_copy.php」よりファイル「db_con.php」を復元してください。
+
+8）フォルダー「company」内のファイル「fl_con.js」をエディタで開く。
+
+9）6行目に、次の記述がある。
+	var rtcode = '\n';
+この記述の中で、「\n」という箇所を、クライアントの動作環境により、適切な値に上書き変更する。
+
+※注意：　ファイル「fl_con.js」内の注釈は目安であり、現時点では3つの環境での動作確認はしておりません。
+最初は初期設定のまま使っていただき、問い合わせ一覧画面が正しく表示されなかった場合、このコードの設定変更を試してみてください。
+
+10）11行目に、次の記述がある。
+	var filename = 'quest';
+この記述の中で、「quest」という箇所を、利用者のお好みにより、適切な値に上書き変更する。
+
+11）ファイル「fl_con.js」を上書き保存する。
+
+※注意：　ファイル「fl_con.js」が壊れると、ダウンロードができなくなります。
+万一、本ファイルが壊れた場合は、ファイル「fl_con_copy.js」よりファイル「fl_con.js」を復元してください。
 
 
 

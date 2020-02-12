@@ -11,7 +11,7 @@
   <br>
   <p class="msg">お問い合わせ管理へようこそ！</p>
 </header>
-<main>
+<main class="maina">
   <form method="post" action="login_chk.php">
     <h3><label for="account">アカウント:</label>
     <input id="text1" type="text" name="account" value="<?php print $self; ?>"></h3>
@@ -19,7 +19,7 @@
     <h3><label for="password">パスワード:</label>
     <input id="text2" type="password" name="password" col="20"></h3>
   <br>
-    <input id="btn1" type="submit" value="ログイン">
+    <input class="btnR" type="submit" value="ログイン">
   </form>
 </main>
 <footer>

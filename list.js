@@ -1,11 +1,11 @@
 $(function()  {
-// 一覧の初期表示：json形式のデータを全件表示
-  //PHPから引き継いだ文字列を、連想配列に戻す  
-//alert(json);
-  var objarr = JSON.parse(json);
+
+//// 問い合わせのリストを生成
+  // 問い合わせ情報のjsonを配列に変換
+  var objarr2 = JSON.parse(json2);
  
   //連想配列の配列を、codeの逆順にソート
-  objarr.sort(function(a, b) {
+  objarr2.sort(function(a, b) {
     if (a.code < b.code) {
       return 1;
     } else {
@@ -14,7 +14,7 @@ $(function()  {
   });
 
   //一行ごとにhtml化
-  $.each(objarr, function(index, value) {
+  $.each(objarr2, function(index, value) {
     var str = '<tr class="';        
     switch (value.status) {
       case 0:
@@ -67,8 +67,7 @@ $(function()  {
   
   }) 
  
-  // 一覧の行がクリックされた場合
-  //$('.task').on('click',function(e) {　　ではなく、下記の書き方
+//// 一覧の行がクリックされた場合
     $(document).on('click', 'tr',function(e) {
       // クリックした行のすべての子要素を取得
       var obj = $(this).children();
@@ -101,9 +100,9 @@ $(function()  {
     })
 
     $(document).on('click', '#btnng',function(e) {
-      // 
+      // キャンセルボタンをクリックしたときの動作
       $('.msg').text('');
-      $('#postMod').html(''); 
-      
+      $('#postMod').html('');       
     })
+
 }) 

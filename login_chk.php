@@ -16,46 +16,45 @@ try {
     $error_message = 'アカウントが入力されていません。';
     $_SESSION['message'] = $error_message;
     print $error_message.'<br>';
-    print '<a href="login.html">ログイン画面に戻る</a>';
+    print '<a href="login.php">ログイン画面に戻る</a>';
     exit();
   }
   if ($pass == null) {
     $error_message = 'パスワードが入力されていません。';
     $_SESSION['message'] = $error_message;
     print $error_message.'<br>';
-    print '<a href="login.html">ログイン画面に戻る</a>';
+    print '<a href="login.php">ログイン画面に戻る</a>';
     exit();
   }
+  
+  $_SESSION['account'] = $account;
 
-  $dsn = 'mysql:dbname=company;host=localhost;charset=utf8';
-  $user = 'root';
-  $password = 'root';
+  require_once('db_con.php');
+  dbConnect();
 
-  $dbh = new PDO($dsn,$user,$password);
-  $dbh->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
-
-  $sql = 'SELECT name FROM mst_staff WHERE account=? AND password=?';
+  $sql = 'SELECT name,authority FROM mst_staff WHERE account=? AND password=?';
   $stmt = $dbh->prepare($sql);
   $data[] = $account;
-  $data[] = $pass;
-//dump($data);
+  $data[] = md5($pass);
+
   $stmt->execute($data);
 
   $dbh = null;
 
   $rec = $stmt->fetch(PDO::FETCH_ASSOC);
-
-  $_SESSION['account'] = $account;
+  
   if ($rec == true) {
     $_SESSION['login'] = 1;
+    $_SESSION['account'] = $account;
     $_SESSION['staff_name'] = $rec['name'];
-    header('Location:menu.html');
+    $_SESSION['authority'] = $rec['authority'];
+    header('Location:menu.php');
     exit();
   } else {
     $error_message = 'アカウントかパスワードが間違っています。';
     $_SESSION['message'] = $error_message;
     print $error_message.'<br>';
-    print '<a href="login.html">ログイン画面に戻る</a>';
+    print '<a href="login.php">ログイン画面に戻る</a>';
   }
 }
 

@@ -10,19 +10,18 @@ if (isset($_SESSION['login']) == false) {
 require_once('common.php');
 
 try {
-  $post = sanitize($_SESSION['addQust']);
-
   require_once('db_con.php');
   dbConnect();
 
   // lock
-  dbLock('dat_questions');
+  dbLock('mst_staff');
 
-  $sql = 'INSERT INTO dat_questions (dateEnt,content,org,client,staff,status,dateAns,answer,dateCls) VALUES (?,?,?,?,?,?,?,?,?)';
+  $sql = 'INSERT INTO mst_staff (account,name,password,authority) VALUES (?,?,?,?)';
   $stmt = $dbh->prepare($sql);
-  foreach ($post as $key => $val) {
-    $data[] = $val;
-  }
+  $data[] = $_SESSION['account'];
+  $data[] = $_SESSION['name'];
+  $data[] = md5($_SESSION['password']);
+  $data[] = $_SESSION['auth2'];
 //var_dump($data);
   $stmt->execute($data);
 
@@ -30,11 +29,9 @@ try {
   dbUnlock();   
 
   $dbh = null;
-  
-  $_SESSION['backflag'] = false;
 
-  print '問い合わせを追加しました。<br>';
-  print '<a href="add.php">お問い合わせ登録画面に戻る</a>';
+  print 'スタッフを追加しました。<br>';
+  print '<a href="menu.php">メニュー画面に戻る</a>';
   
 }
 
